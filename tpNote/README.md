@@ -1,168 +1,123 @@
-# Analyse achat
+# Liste des colonnes ajoutées avec hiérarchies, dimensions et métriques par DataFrame
 
-## 1. **Métriques**
+## 1. **order_payments**
 
-- `price` (montant des articles)
-- `freight_value` (valeur du fret)
-- `name_lenght` (longueur des noms de produits)
-- `description_lenght` (longueur des descriptions)
-- `photos_qty` (nombre de photos)
-- `weight_g` (poids en grammes)
-- `length_cm` (longueur en cm)
-- `height_cm` (hauteur en cm)
-- `width_cm` (largeur en cm)
+- **Hiérarchie :** Mode de paiement
+- **Dimensions :**
+    - `int_boleto` (nombre de paiements par boleto)
+    - `int_credit_card` (nombre de paiements par carte de crédit)
+    - `int_debit_card` (nombre de paiements par carte de débit)
+    - `int_not_defined` (nombre de paiements indéfinis)
+    - `int_voucher` (nombre de paiements par bon)
+- **Métriques :**
+    - `value_boleto` (montant total payé par boleto)
+    - `value_credit_card` (montant total payé par carte de crédit)
+    - `value_debit_card` (montant total payé par carte de débit)
+    - `value_not_defined` (montant total payé via un mode indéfini)
+    - `value_voucher` (montant total payé par bon)
 
-## 2. **Dimensions**
+---
 
-### A. **Commandes et produits**
+## 2. **orders**
 
-- `order_id` (identifiant de commande)
-- `order_item_id` (identifiant d'item dans la commande)
-- `product_id` (identifiant produit)
-- `category_name` (catégorie de produit)
-- `status` (statut de la commande)
+- **Hiérarchie :** Temps > Commandes
+- **Dimensions :**
+    - `annee` (année de la commande)
+    - `mois` (mois de la commande)
+    - `annee_mois` (année et mois combinés)
+    - `jour` (jour de la commande)
+    - `annee_jour` (année et jour combinés)
+    - `jour_semaine` (jour de la semaine)
+    - `trimestre` (trimestre de l'année)
+    - `annee_trimestre` (année et trimestre combinés)
+    - `semaine` (semaine de l'année)
+    - `annee_semaine` (année et semaine combinées)
+    - `heure` (heure de la commande)
+    - `status` (statut de la commande)
+- **Métriques :**
+    - `approuvee` (date commande approuvée)
+    - `envoyee` (date commande envoyée)
+    - `livree` (date commande livrée)
+    - `estimee` (date commande estimée livrée)
+    - `jours_retard` (jours de retard de livraison)
 
-### B. **Clients**
+---
 
-- `customer_id` (identifiant client)
-- `customer_unique_id` (identifiant unique client)
-- `cust_zip_code` (code postal client)
-- `cust_city` (ville client)
-- `cust_state` (état client)
-- `cust_name_state` (nom et état client)
+## 3. **order_reviews**
 
-### C. **Vendeurs**
+- **Hiérarchie :** Commentaires > Temps
+- **Dimensions :**
+    - `answer_1`, `answer_2`, `answer_3`, `answer_4`, `answer_5` (temps de réponse pour les commentaires)
+    - `comment_1`, `comment_2`, `comment_3`, `comment_4`, `comment_5` (textes des commentaires)
+    - `creation_1`, `creation_2`, `creation_3`, `creation_4`, `creation_5` (dates de création des commentaires)
+- **Métriques :**
+    - `score_1`, `score_2`, `score_3`, `score_4`, `score_5` (notes des commentaires)
+    - `score` (note globale)
+    - `answer` (temps de réponse moyen)
+    - `creation` (date de création moyenne des commentaires)
+    - `comment` (commentaire moyen/récapitulatif)
 
-- `seller_id` (identifiant vendeur)
-- `sell_zip_code` (code postal vendeur)
-- `sell_city` (ville vendeur)
-- `sell_state` (état vendeur)
-- `sell_name_state` (nom et état vendeur)
+---
 
-### D. **Temps**
+## 4. **order_customers**
 
-- **Dates principales :**
-    - `purchase_timestamp` (heure d'achat)
-    - `approved_at` (date d'approbation)
-    - `delivered_carrier` (date livraison transporteur)
-    - `delivered_customer` (date livraison client)
-    - `estimated_delivery` (date estimée de livraison)
+- **Hiérarchie :** Localisation > Clients
+- **Dimensions :**
+    - `zip_code` (code postal du client)
+    - `city` (ville du client)
+    - `state` (état du client)
+    - `name_state` (nom de l'état du client)
+    - `lat_min`, `lat_max`, `lat` (latitude du client - min, max, moyenne)
+    - `lng_min`, `lng_max`, `lng` (longitude du client - min, max, moyenne)
+- **Métriques :**
+    - *(Aucune métrique supplémentaire)*
 
-- **Découpages temporels :**
-    - `annee`, `mois`, `annee_mois`, `jour`, `annee_jour`
-    - `jour_semaine`, `trimestre`, `annee_trimestre`
-    - `semaine`, `annee_semaine`, `heure`
+---
 
-## 3. **Hiérarchies**
+## 5. **geolocation**
 
-### A. **Temps**
+- **Hiérarchie :** Localisation
+- **Dimensions :**
+    - *(Aucune colonne ajoutée identifiable ici)*
 
-1. **Hiérarchie annuelle :**
-    - `annee` > `trimestre` > `mois` > `jour` > `heure`
-2. **Hiérarchie hebdomadaire :**
-    - `annee` > `semaine` > `jour_semaine`
+---
 
-### B. **Localisation**
+## 6. **products**
 
-1. **Client :**
-    - `cust_state` > `cust_city` > `cust_zip_code`
-2. **Vendeur :**
-    - `sell_state` > `sell_city` > `sell_zip_code`
+- **Hiérarchie :** Catégories > Produits
+- **Dimensions :**
+    - `name_lenght` (longueur du nom du produit)
+    - `description_lenght` (longueur de la description du produit)
+    - `photos_qty` (nombre de photos du produit)
+    - `weight_g` (poids en grammes)
+    - `length_cm` (longueur en cm)
+    - `height_cm` (hauteur en cm)
+    - `width_cm` (largeur en cm)
+    - `category_name` (nom de la catégorie)
+- **Métriques :**
+    - *(Aucune métrique supplémentaire)*
 
-### C. **Commande**
+---
 
-- `order_id` > `order_item_id`
+## 7. **order_items**
 
-### D. **Produit**
+- **Hiérarchie :** Commandes > Articles
+- **Dimensions :**
+    - `limit` (limite d'expédition)
+- **Métriques :**
+    - *(Aucune métrique supplémentaire)*
 
-- `category_name` > `product_id`
+---
 
-# Analyse Vente
+## 8. **sellers**
 
-## 1. Métriques
-
-- Paiements :
-    - `value_boleto` (valeur par boleto)
-    - `value_credit_card` (valeur par carte de crédit)
-    - `value_debit_card` (valeur par carte de débit)
-    - `value_not_defined` (valeur par méthode indéfinie)
-    - `value_voucher` (valeur par voucher)
-
-- Interactions :
-    - `int_boleto` (nombre d'interactions boleto)
-    - `int_credit_card` (nombre d'interactions carte de crédit)
-    - `int_debit_card` (nombre d'interactions carte de débit)
-    - `int_not_defined` (nombre d'interactions méthode indéfinie)
-    - `int_voucher` (nombre d'interactions voucher)
-
-- Scores et évaluations :
-    - `score_1`, `score_2`, `score_3`, `score_4`, `score_5` (scores par niveau)
-    - `score` (score total)
-
-- Latitude/Longitude :
-    - `lat_min`, `lat_max`, `lat`
-    - `lng_min`, `lng_max`, `lng`
-
-## 2. Dimensions
-
-### A. Commandes
-
-- `order_id` (identifiant de commande)
-- `customer_id` (identifiant client)
-- `status` (statut de la commande)
-
-### B. Temps
-
-- Dates principales :
-    - `purchase_timestamp` (heure d'achat)
-    - `approved_at` (date d'approbation)
-    - `delivered_carrier` (date livraison transporteur)
-    - `delivered_customer` (date livraison client)
-    - `estimated_delivery` (date estimée de livraison)
-
-- Découpages temporels :
-    - `annee`, `mois`, `annee_mois`, `jour`, `annee_jour`
-    - `jour_semaine`, `trimestre`, `annee_trimestre`
-    - `semaine`, `annee_semaine`, `heure`
-
-### C. Paiements
-
-- `answer_1`, `answer_2`, `answer_3`, `answer_4`, `answer_5` (réponses spécifiques)
-- `answer` (réponse globale)
-- `comment_1`, `comment_2`, `comment_3`, `comment_4`, `comment_5` (commentaires spécifiques)
-- `comment` (commentaire global)
-- `creation_1`, `creation_2`, `creation_3`, `creation_4`, `creation_5` (créations spécifiques)
-- `creation` (création globale)
-
-### D. Clients
-
-- `customer_unique_id` (identifiant unique client)
-- `zip_code` (code postal client)
-- `city` (ville client)
-- `state` (état client)
-- `name_state` (nom et état client)
-
-## 3. Hiérarchies
-
-### A. Temps
-
-1. Hiérarchie annuelle :
-    - `annee` > `trimestre` > `mois` > `jour` > `heure`
-2. Hiérarchie hebdomadaire :
-    - `annee` > `semaine` > `jour_semaine`
-
-### B. Localisation
-
-1. Latitude/Longitude :
-    - `lat_min`, `lat_max`, `lat`
-    - `lng_min`, `lng_max`, `lng`
-2. Hiérarchie géographique :
-    - `state` > `city` > `zip_code`
-
-### C. Commande
-
-- `order_id` > `customer_id`
-
-### D. Paiements et interactions
-
-- `creation` > `answer` > `comment` > `score`
+- **Hiérarchie :** Localisation > Vendeurs
+- **Dimensions :**
+    - `sell_zip_code` (code postal du vendeur)
+    - `sell_city` (ville du vendeur)
+    - `sell_state` (état du vendeur)
+    - `sell_name_state` (nom de l'état du vendeur)
+    - `sell_lat` (latitude du vendeur)
+    - `sell_lng` (longitude du vendeur)
+- **Métriques :**
+    - *(Aucune métrique supplémentaire)*
